@@ -1,4 +1,4 @@
-package com.luongbui.andersen_festival_muzei;
+package com.luongbui.andersenfestival.muzei;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,19 +17,19 @@ import android.support.v4.content.FileProvider;
 
 import com.google.android.apps.muzei.api.Artwork;
 import com.google.android.apps.muzei.api.MuzeiArtSource;
-import com.luongbui.andersen_festival_muzei.model.ArtPiece;
+import com.luongbui.andersenfestival.muzei.model.ArtPiece;
 
 public class AndersenFestivalSource extends MuzeiArtSource {
 	
-	private static final String FILE_PROVIDER_AUTHORITIES = "com.luongbui.andersen_festival_muzei.fileprovider";
+	private static final String FILE_PROVIDER_AUTHORITIES = "com.luongbui.andersenfestival.muzei.fileprovider";
 	
 	private static final String PORTRAITS_SUBDIR = "andersen_portraits_2014";
 	
-	private static final String NAME = "com.luongbui.andersen_festival_muzei.AndersenFestivalSource";
+	private static final String NAME = "luongbui.AndersenFestivalSource";
 	
-	private static final String SUBS_KEY = NAME + "_SUBS";
+	private static final String SUBS_KEY = NAME + ".Subs";
 	
-	private static final String ART_INDEX_KEY = NAME + "_INDEX";
+	private static final String ART_INDEX_KEY = NAME + ".Index";
 	
 	/**
 	 * public and static to use it as data for the list adapter of the configuration activity.<br>
@@ -94,7 +94,8 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   }
 	
 	private int loadArtIndex() {
-	   return prefs.getInt(ART_INDEX_KEY, (int)(Math.random() * ((AndersenFestivalSource.PORTRAITS.length-1) + 1)));
+	   return prefs.getInt(ART_INDEX_KEY, 0);
+	   //return prefs.getInt(ART_INDEX_KEY, (int)(Math.random() * ((AndersenFestivalSource.PORTRAITS.length-1) + 1)));
 	   }
 	
 	private void incrArtIndex() {
@@ -114,8 +115,12 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	@Override
 	protected void onUpdate(int reason) {
 		try {
-			android.util.Log.d("onUpdate()", "onUpdate()");
-			if(reason==UPDATE_REASON_USER_NEXT || reason==UPDATE_REASON_SCHEDULED) {
+			if(reason==UPDATE_REASON_INITIAL) {
+			   android.util.Log.d("UPDATE_REASON_INITIAL", "onUpdate()");
+			   artIndex = 0;
+			   }
+			else if(reason==UPDATE_REASON_USER_NEXT ||
+			      reason==UPDATE_REASON_SCHEDULED) {
 			   incrArtIndex();
 			   //android.util.Log.d("INDEX USER NEXT", ""+artIndex);
 			   }

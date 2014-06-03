@@ -1,7 +1,7 @@
-package com.luongbui.andersen_festival_muzei;
+package com.luongbui.andersenfestival.muzei;
 
-import com.luongbui.andersen_festival_muzei.model.ArtPiece;
-import com.luongbui.andersen_festival_muzei.ui.ArtGalleryAdapter;
+import com.luongbui.andersenfestival.muzei.model.ArtPiece;
+import com.luongbui.andersenfestival.muzei.ui.ArtGalleryAdapter;
 
 import android.content.Intent;
 import android.net.Uri;

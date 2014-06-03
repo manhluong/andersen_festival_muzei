@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.luongbui.andersen_festival_muzei"
+    package="com.luongbui.andersenfestival.muzei"
     android:versionCode="1"
     android:versionName="1.0.0" >
 
@@ -14,7 +14,7 @@
         
         <provider
     		android:name="android.support.v4.content.FileProvider"
-    		android:authorities="com.luongbui.andersen_festival_muzei.fileprovider"
+    		android:authorities="com.luongbui.andersenfestival.muzei.fileprovider"
     		android:exported="false"
     		android:grantUriPermissions="true">
     		<meta-data

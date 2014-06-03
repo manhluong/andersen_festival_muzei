@@ -1,7 +1,7 @@
-package com.luongbui.andersen_festival_muzei.ui;
+package com.luongbui.andersenfestival.muzei.ui;
 
-import com.luongbui.andersen_festival_muzei.R;
-import com.luongbui.andersen_festival_muzei.model.ArtPiece;
+import com.luongbui.andersenfestival.muzei.R;
+import com.luongbui.andersenfestival.muzei.model.ArtPiece;
 
 import android.content.Context;
 import android.view.LayoutInflater;

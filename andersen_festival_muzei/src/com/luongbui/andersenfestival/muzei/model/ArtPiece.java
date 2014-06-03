@@ -1,4 +1,4 @@
-package com.luongbui.andersen_festival_muzei.model;
+package com.luongbui.andersenfestival.muzei.model;
 
 public class ArtPiece {
    private String fileName;
