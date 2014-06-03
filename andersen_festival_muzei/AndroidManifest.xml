@@ -2,10 +2,6 @@
     package="com.luongbui.andersen_festival_muzei"
     android:versionCode="1"
     android:versionName="1.0.0" >
-    
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -25,6 +21,12 @@
         		android:name="android.support.FILE_PROVIDER_PATHS"
         		android:resource="@xml/file_paths" />
 		</provider>
+		
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/settings_title"
+            android:exported="true">
+        </activity>
         
         <service android:name=".AndersenFestivalSource"
             android:label="@string/source_name"
@@ -33,7 +35,10 @@
             <intent-filter>
                 <action android:name="com.google.android.apps.muzei.api.MuzeiArtSource" />
             </intent-filter>
-            <meta-data android:name="color" android:value="#fa0" />
+            <meta-data android:name="color"
+                android:value="#fa0" />
+            <meta-data android:name="settingsActivity"
+        		android:value=".SettingsActivity" />
         </service>
         
     </application>

@@ -29,12 +29,15 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	
 	private static final String SUBS_KEY = NAME + "_SUBS";
 	
+	private static final String ART_INDEX_KEY = NAME + "_INDEX";
+	
 	/**
 	 * public and static to use it as data for the list adapter of the configuration activity.<br>
 	 * <br>
 	 * A bit brutal, I know, but it's a quick & dirty solution.
 	 */
 	public static final ArtPiece[] PORTRAITS = {
+	   new ArtPiece("giorgia_marras.jpg", "Hans Christian Andersen", "Giorgia Marras", "2014", "http://giorgiamarras.blogspot.it/"),
 	   new ArtPiece("anais_tonelli.jpg", "Hans Christian Andersen", "Anais Tonelli", "2014", "http://anaistonelli.blogspot.it/")
       };
 	
@@ -43,6 +46,8 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	private SharedPreferences prefs;
 	
 	private Uri fileUri;
+	
+	private int artIndex;
 	
 	public AndersenFestivalSource() {
 		super(NAME);
@@ -53,6 +58,8 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   super.onCreate();
 	   prefs = getApplicationContext().getSharedPreferences(NAME, Context.MODE_PRIVATE);
       subscribers = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
+      setUserCommands(BUILTIN_COMMAND_ID_NEXT_ARTWORK);
+      artIndex = loadArtIndex();
       }
 	
 	@Override
@@ -72,8 +79,6 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   // Remove the subscriber.
 	   Set<String> value = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
       value.remove(subscriber.getPackageName());
-      if(value.size()<=0 && fileUri!=null)
-         getApplicationContext().revokeUriPermission(fileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
       saveSubsPrefs(value);
     	}
 	
@@ -82,19 +87,42 @@ public class AndersenFestivalSource extends MuzeiArtSource {
       editor.putStringSet(SUBS_KEY, value);
       editor.commit();
 	   }
+	
+	private int loadArtIndex() {
+	   return prefs.getInt(ART_INDEX_KEY, (int)(Math.random() * ((AndersenFestivalSource.PORTRAITS.length-1) + 1)));
+	   }
+	
+	private void incrArtIndex() {
+	   if(artIndex < (AndersenFestivalSource.PORTRAITS.length-1))
+         artIndex++;
+      else
+         artIndex = 0;
+	   saveArtIndex(artIndex);
+	   }
+	
+	private void saveArtIndex(int value) {
+	   SharedPreferences.Editor editor = prefs.edit();
+      editor.putInt(ART_INDEX_KEY, value);
+      editor.commit();
+	   }
 
 	@Override
 	protected void onUpdate(int reason) {
 		try {
 			android.util.Log.d("onUpdate()", "onUpdate()");
-			int index = 0;
+			if(reason==UPDATE_REASON_USER_NEXT) {
+			   incrArtIndex();
+			   android.util.Log.d("INDEX USER NEXT", ""+artIndex);
+			   }
+			//android.util.Log.d("INDEX", ""+artIndex);
 			//For now, empty the external sub dir each time: TODO a more "flexible" cache system.
 			deleteExternalSubdir(new File(getApplicationContext().getFilesDir(),
 		                                  PORTRAITS_SUBDIR));
-			File outFile = new File(getApplicationContext().getFilesDir(), PORTRAITS_SUBDIR + File.separator + PORTRAITS[index].getFileName());
+			File outFile = new File(getApplicationContext().getFilesDir(),
+			                        PORTRAITS_SUBDIR + File.separator + PORTRAITS[artIndex].getFileName());
          //TODO test if the file exits, should be false.
 			android.util.Log.d("TEST FILE EXISTS", ""+outFile.exists()+" : " + outFile.getPath());
-			copyAsset(PORTRAITS_SUBDIR, PORTRAITS[index].getFileName());
+			copyAsset(PORTRAITS_SUBDIR, PORTRAITS[artIndex].getFileName());
 			//TODO test if the file exits, should be true.
 			android.util.Log.d("TEST FILE EXISTS", ""+outFile.exists()+" : " + outFile.getPath());
 			fileUri = FileProvider.getUriForFile(getApplicationContext(),
@@ -107,10 +135,10 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 			android.util.Log.d("SHARED FILE URI", ""+fileUri.toString());
 			publishArtwork(new Artwork.Builder()
 								.imageUri(fileUri)
-								.title(PORTRAITS[index].getTitle())
-								.byline(PORTRAITS[index].getByLine())
+								.title(PORTRAITS[artIndex].getTitle())
+								.byline(PORTRAITS[artIndex].getByLine())
 								.viewIntent(new Intent(Intent.ACTION_VIEW,
-										Uri.parse(PORTRAITS[index].getAuthorUrl())))
+										Uri.parse(PORTRAITS[artIndex].getAuthorUrl())))
 								.build());
 			}
 		catch (IOException e) {
@@ -120,11 +148,11 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 		}
 	
    protected void deleteExternalSubdir(File subPath) {
-	  if(subPath.isDirectory()) {
+      if(subPath.isDirectory()) {
          for(File child : subPath.listFiles())
-        	 deleteExternalSubdir(child);
-	     }
-	  subPath.delete();
+            deleteExternalSubdir(child);
+         }
+      subPath.delete();
       }
 
 	/**
