@@ -19,7 +19,7 @@
 # *.jar Needed for libs. Don't want to redownload them.
 *.rar
 *.tar
-# *.zip Needed for Pure Data patches.
+*.zip Needed for Pure Data patches.
 
 # Logs and databases #
 ######################
@@ -52,3 +52,7 @@ hs_err_pid*
 bin/
 gen/
 
+# Assets #
+##########
+*.jpg
+*.png
