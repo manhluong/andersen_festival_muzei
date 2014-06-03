@@ -5,73 +5,112 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Set;
+import java.util.TreeSet;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
 
 import com.google.android.apps.muzei.api.Artwork;
 import com.google.android.apps.muzei.api.MuzeiArtSource;
+import com.luongbui.andersen_festival_muzei.model.ArtPiece;
 
 public class AndersenFestivalSource extends MuzeiArtSource {
 	
 	private static final String FILE_PROVIDER_AUTHORITIES = "com.luongbui.andersen_festival_muzei.fileprovider";
 	
-	private static final String PORTRAITS_SUBDIR = "andersen_portraits_2014"; 
+	private static final String PORTRAITS_SUBDIR = "andersen_portraits_2014";
 	
-	private static final String[][] PORTRAITS = {
-		{"anais_tonelli.jpg", "Hans Christian Andersen", "Anais Tonelli, 2014", "http://anaistonelli.blogspot.it/"}
-		};
+	private static final String NAME = "com.luongbui.andersen_festival_muzei.AndersenFestivalSource";
+	
+	private static final String SUBS_KEY = NAME + "_SUBS";
+	
+	/**
+	 * public and static to use it as data for the list adapter of the configuration activity.<br>
+	 * <br>
+	 * A bit brutal, I know, but it's a quick & dirty solution.
+	 */
+	public static final ArtPiece[] PORTRAITS = {
+	   new ArtPiece("anais_tonelli.jpg", "Hans Christian Andersen", "Anais Tonelli", "2014", "http://anaistonelli.blogspot.it/")
+      };
+	
+	private Set<String> subscribers;
+	
+	private SharedPreferences prefs;
 	
 	private Uri fileUri;
-
+	
 	public AndersenFestivalSource() {
-		super("com.luongbui.andersen_festival_muzei.AndersenFestivalSource");
+		super(NAME);
 		}
 	
 	@Override
-    protected void onSubscriberAdded(ComponentName subscriber) {
-        super.onSubscriberAdded(subscriber);
-        android.util.Log.d("onSubscriberAdded()", "onSubscriberAdded()");
-        File sharedFile = new File(getApplicationContext().getFilesDir(),
-									PORTRAITS_SUBDIR + File.separator + PORTRAITS[0][0]);
-        fileUri = FileProvider.getUriForFile(getApplicationContext(),
-												FILE_PROVIDER_AUTHORITIES,
-												sharedFile);
-        getApplicationContext().grantUriPermission(subscriber.getPackageName(),
-													fileUri,
-													Intent.FLAG_GRANT_READ_URI_PERMISSION);
+   public void onCreate() {
+	   super.onCreate();
+	   prefs = getApplicationContext().getSharedPreferences(NAME, Context.MODE_PRIVATE);
+      subscribers = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
+      }
+	
+	@Override
+	protected void onSubscriberAdded(ComponentName subscriber) {
+	   super.onSubscriberAdded(subscriber);
+	   android.util.Log.d("onSubscriberAdded()", "onSubscriberAdded()");
+	   // Add the subscriber, so we can grant permissions later.
+	   Set<String> value = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
+      value.add(subscriber.getPackageName());
+      saveSubsPrefs(value);
     	}
 	
 	@Override
-    protected void onSubscriberRemoved(ComponentName subscriber) {
-        super.onSubscriberRemoved(subscriber);
-        android.util.Log.d("onSubscriberRemoved()", "onSubscriberRemoved()");
+	protected void onSubscriberRemoved(ComponentName subscriber) {
+	   super.onSubscriberRemoved(subscriber);
+	   android.util.Log.d("onSubscriberRemoved()", "onSubscriberRemoved()");
+	   // Remove the subscriber.
+	   Set<String> value = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
+      value.remove(subscriber.getPackageName());
+      if(value.size()<=0 && fileUri!=null)
+         getApplicationContext().revokeUriPermission(fileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+      saveSubsPrefs(value);
     	}
+	
+	private void saveSubsPrefs(Set<String> value) {
+      SharedPreferences.Editor editor = prefs.edit();
+      editor.putStringSet(SUBS_KEY, value);
+      editor.commit();
+	   }
 
 	@Override
 	protected void onUpdate(int reason) {
 		try {
 			android.util.Log.d("onUpdate()", "onUpdate()");
+			int index = 0;
 			//For now, empty the external sub dir each time: TODO a more "flexible" cache system.
 			deleteExternalSubdir(new File(getApplicationContext().getFilesDir(),
 		                                  PORTRAITS_SUBDIR));
-			//TODO test if the file exits, should be false.
-			File outFile = new File(getApplicationContext().getFilesDir(), PORTRAITS_SUBDIR + File.separator + PORTRAITS[0][0]);
+			File outFile = new File(getApplicationContext().getFilesDir(), PORTRAITS_SUBDIR + File.separator + PORTRAITS[index].getFileName());
+         //TODO test if the file exits, should be false.
 			android.util.Log.d("TEST FILE EXISTS", ""+outFile.exists()+" : " + outFile.getPath());
-			//TODO copy a random file.
-			copyAsset(PORTRAITS_SUBDIR, PORTRAITS[0][0]);
+			copyAsset(PORTRAITS_SUBDIR, PORTRAITS[index].getFileName());
 			//TODO test if the file exits, should be true.
 			android.util.Log.d("TEST FILE EXISTS", ""+outFile.exists()+" : " + outFile.getPath());
-			
+			fileUri = FileProvider.getUriForFile(getApplicationContext(),
+                                              FILE_PROVIDER_AUTHORITIES,
+                                              outFile);
+			for (String subPackage : subscribers)
+			   getApplicationContext().grantUriPermission(subPackage,
+                                                       fileUri,
+                                                       Intent.FLAG_GRANT_READ_URI_PERMISSION);
 			android.util.Log.d("SHARED FILE URI", ""+fileUri.toString());
 			publishArtwork(new Artwork.Builder()
 								.imageUri(fileUri)
-								.title(PORTRAITS[0][1])
-								.byline(PORTRAITS[0][2])
+								.title(PORTRAITS[index].getTitle())
+								.byline(PORTRAITS[index].getByLine())
 								.viewIntent(new Intent(Intent.ACTION_VIEW,
-										Uri.parse(PORTRAITS[0][3])))
+										Uri.parse(PORTRAITS[index].getAuthorUrl())))
 								.build());
 			}
 		catch (IOException e) {
@@ -97,18 +136,11 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	 */
 	protected void copyAsset(String subPath, String fileName) throws IOException {
 		android.content.res.AssetManager assetManager = getAssets();
-		String[] files = assetManager.list(subPath);
-		if (files.length == 0) // It's a file.
-		   throw new IOException("subPath of copyAssets() is not a dir.");
-		else {
-		   // Create the new output directory to store the copied files.
-		   File outDir = new File(getApplicationContext().getFilesDir(), subPath);
-		   if(!outDir.exists())
-		      outDir.mkdir();
-		   // Copy the asset.
-		   // From Android doc, each element of files[] is relative to "subPath".
-		   copyFileToDataDir(assetManager, subPath + File.separator + fileName);
-		   }
+		File outDir = new File(getApplicationContext().getFilesDir(), subPath);
+		if(!outDir.exists())
+         outDir.mkdir();
+		// Copy the asset.
+		copyFileToDataDir(assetManager, subPath + File.separator + fileName);
 		}
 	
 	/**
