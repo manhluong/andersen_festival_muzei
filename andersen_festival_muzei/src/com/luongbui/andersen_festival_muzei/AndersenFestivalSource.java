@@ -42,7 +42,8 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   new ArtPiece("luca_tagliafico.jpg", "Hans Christian Andersen", "Luca Tagliafico", "2014", "http://www.frizzifrizzi.it/2013/06/28/7am-luca-tagliafico/"),
 	   new ArtPiece("daniele_castellano.jpg", "Hans Christian Andersen", "Daniele Castellano", "2014", "http://altairiv.tumblr.com/"),
 	   new ArtPiece("letizia_iannaccone.jpg", "Hans Christian Andersen", "Letizia Iannaccone", "2014", "http://www.letiziaiannaccone.com/"),
-	   new ArtPiece("anais_tonelli.jpg", "Hans Christian Andersen", "Anais Tonelli", "2014", "http://anaistonelli.blogspot.it/")
+	   new ArtPiece("anais_tonelli.jpg", "Hans Christian Andersen", "Anais Tonelli", "2014", "http://anaistonelli.blogspot.it/"),
+	   new ArtPiece("silvia_venturi.jpg", "Hans Christian Andersen", "Silvia Venturi", "2014", "http://silviaventuri.tumblr.com/")
       };
 	
 	private Set<String> subscribers;
@@ -114,9 +115,9 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	protected void onUpdate(int reason) {
 		try {
 			android.util.Log.d("onUpdate()", "onUpdate()");
-			if(reason==UPDATE_REASON_USER_NEXT) {
+			if(reason==UPDATE_REASON_USER_NEXT || reason==UPDATE_REASON_SCHEDULED) {
 			   incrArtIndex();
-			   android.util.Log.d("INDEX USER NEXT", ""+artIndex);
+			   //android.util.Log.d("INDEX USER NEXT", ""+artIndex);
 			   }
 			//android.util.Log.d("INDEX", ""+artIndex);
 			//For now, empty the external sub dir each time: TODO a more "flexible" cache system.
@@ -144,6 +145,8 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 								.viewIntent(new Intent(Intent.ACTION_VIEW,
 										Uri.parse(PORTRAITS[artIndex].getAuthorUrl())))
 								.build());
+			// 12 Hours
+			scheduleUpdate(System.currentTimeMillis() + 12 * 60 * 60 * 1000);
 			}
 		catch (IOException e) {
 			// TODO Auto-generated catch block
