@@ -46,13 +46,9 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   new ArtPiece("silvia_venturi.jpg", "Hans Christian Andersen", "Silvia Venturi", "2014", "http://silviaventuri.tumblr.com/")
       };
 	
-	private Set<String> subscribers;
-	
 	private SharedPreferences prefs;
 	
 	private Uri fileUri;
-	
-	private int artIndex;
 	
 	public AndersenFestivalSource() {
 		super(NAME);
@@ -62,9 +58,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
    public void onCreate() {
 	   super.onCreate();
 	   prefs = getApplicationContext().getSharedPreferences(NAME, Context.MODE_PRIVATE);
-      subscribers = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
       setUserCommands(BUILTIN_COMMAND_ID_NEXT_ARTWORK);
-      artIndex = loadArtIndex();
       }
 	
 	@Override
@@ -94,11 +88,11 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   }
 	
 	private int loadArtIndex() {
-	   return prefs.getInt(ART_INDEX_KEY, 0);
-	   //return prefs.getInt(ART_INDEX_KEY, (int)(Math.random() * ((AndersenFestivalSource.PORTRAITS.length-1) + 1)));
+	   int res = prefs.getInt(ART_INDEX_KEY, (int)(Math.random() * ((AndersenFestivalSource.PORTRAITS.length-1) + 1)));
+	   return res;
 	   }
 	
-	private void incrArtIndex() {
+	private void incrArtIndex(int artIndex) {
 	   if(artIndex < (AndersenFestivalSource.PORTRAITS.length-1))
          artIndex++;
       else
@@ -115,16 +109,14 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	@Override
 	protected void onUpdate(int reason) {
 		try {
-			if(reason==UPDATE_REASON_INITIAL) {
-			   android.util.Log.d("UPDATE_REASON_INITIAL", "onUpdate()");
-			   artIndex = 0;
-			   }
-			else if(reason==UPDATE_REASON_USER_NEXT ||
+		   // First time, load the index randomly.
+		   int artIndex = loadArtIndex();
+		   if(reason==UPDATE_REASON_USER_NEXT ||
 			      reason==UPDATE_REASON_SCHEDULED) {
-			   incrArtIndex();
+		      incrArtIndex(artIndex);
 			   //android.util.Log.d("INDEX USER NEXT", ""+artIndex);
 			   }
-			//android.util.Log.d("INDEX", ""+artIndex);
+			android.util.Log.d("INDEX", ""+artIndex);
 			//For now, empty the external sub dir each time: TODO a more "flexible" cache system.
 			deleteExternalSubdir(new File(getApplicationContext().getFilesDir(),
 		                                  PORTRAITS_SUBDIR));
@@ -138,6 +130,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 			fileUri = FileProvider.getUriForFile(getApplicationContext(),
                                               FILE_PROVIDER_AUTHORITIES,
                                               outFile);
+			Set<String> subscribers = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
 			for (String subPackage : subscribers)
 			   getApplicationContext().grantUriPermission(subPackage,
                                                        fileUri,
