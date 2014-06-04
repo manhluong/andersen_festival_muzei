@@ -6,7 +6,7 @@
 *.exe
 *.o
 *.so
-# *.a Needed for libpd ios archive.
+*.a
 
 # Packages #
 ############
@@ -55,4 +55,4 @@ gen/
 # Assets #
 ##########
 *.jpg
-*.png
+
