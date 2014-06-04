@@ -40,10 +40,16 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   new ArtPiece("giorgia_marras.jpg", "Hans Christian Andersen", "Giorgia Marras", "2014", "http://giorgiamarras.blogspot.it/"),
 	   new ArtPiece("bruno_zocca.jpg", "Hans Christian Andersen", "Bruno Zocca", "2014", "http://brunozoccaillustrator.tumblr.com/"),
 	   new ArtPiece("luca_tagliafico.jpg", "Hans Christian Andersen", "Luca Tagliafico", "2014", "http://lucatagliaficoillustrator.tumblr.com/"),
+	   new ArtPiece("arianna_zuppello.jpg", "Hans Christian Andersen", "Arianna Zuppello", "2014", "http://arianna-zuppello.tumblr.com/"),
 	   new ArtPiece("daniele_castellano.jpg", "Hans Christian Andersen", "Daniele Castellano", "2014", "http://altairiv.tumblr.com/"),
 	   new ArtPiece("letizia_iannaccone.jpg", "Hans Christian Andersen", "Letizia Iannaccone", "2014", "http://www.letiziaiannaccone.com/"),
+	   new ArtPiece("jacopo_oliveri.jpg", "Hans Christian Andersen", "Jacopo Oliveri", "2014", "http://www.fatomale.com/"),
+	   new ArtPiece("stefano_tirasso.jpg", "Hans Christian Andersen", "Stefano Tirasso", "2014", "http://stetirasso.tumblr.com/"),
+	   new ArtPiece("matilde_martinelli.jpg", "Hans Christian Andersen", "Matilde Martinelli", "2014", "http://matildemartinelli.tumblr.com/"),
+	   new ArtPiece("olga_tranchini.jpg", "Hans Christian Andersen", "Olga Tranchini", "2014", "http://www.olgatranchini.blogspot.it/"),
 	   new ArtPiece("anais_tonelli.jpg", "Hans Christian Andersen", "Anais Tonelli", "2014", "http://anaistonelli.blogspot.it/"),
-	   new ArtPiece("silvia_venturi.jpg", "Hans Christian Andersen", "Silvia Venturi", "2014", "http://silviaventuri.tumblr.com/")
+	   new ArtPiece("silvia_venturi.jpg", "Hans Christian Andersen", "Silvia Venturi", "2014", "http://silviaventuri.tumblr.com/"),
+	   new ArtPiece("francesca_consalvo.jpg", "Hans Christian Andersen", "Francesca Consalvo", "2014", "")
       };
 	
 	private SharedPreferences prefs;
