@@ -39,7 +39,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	public static final ArtPiece[] PORTRAITS = {
 	   new ArtPiece("giorgia_marras.jpg", "Hans Christian Andersen", "Giorgia Marras", "2014", "http://giorgiamarras.blogspot.it/"),
 	   new ArtPiece("bruno_zocca.jpg", "Hans Christian Andersen", "Bruno Zocca", "2014", "http://brunozoccaillustrator.tumblr.com/"),
-	   new ArtPiece("luca_tagliafico.jpg", "Hans Christian Andersen", "Luca Tagliafico", "2014", "http://www.frizzifrizzi.it/2013/06/28/7am-luca-tagliafico/"),
+	   new ArtPiece("luca_tagliafico.jpg", "Hans Christian Andersen", "Luca Tagliafico", "2014", "http://lucatagliaficoillustrator.tumblr.com/"),
 	   new ArtPiece("daniele_castellano.jpg", "Hans Christian Andersen", "Daniele Castellano", "2014", "http://altairiv.tumblr.com/"),
 	   new ArtPiece("letizia_iannaccone.jpg", "Hans Christian Andersen", "Letizia Iannaccone", "2014", "http://www.letiziaiannaccone.com/"),
 	   new ArtPiece("anais_tonelli.jpg", "Hans Christian Andersen", "Anais Tonelli", "2014", "http://anaistonelli.blogspot.it/"),
