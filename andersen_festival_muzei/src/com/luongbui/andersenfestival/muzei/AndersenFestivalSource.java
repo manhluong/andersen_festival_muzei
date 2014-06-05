@@ -216,10 +216,8 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	 * @throws IOException
 	 */
 	protected void streamCopy(InputStream in, OutputStream out) throws IOException {
-	   // Transfer chunks of 1024 bytes.
 	   byte[] buffer = new byte[1024];
 	   int read;
-	   // Transfer between streams.
 	   for(;(read = in.read(buffer)) != -1;)
 	      out.write(buffer, 0, read);
 	   }
