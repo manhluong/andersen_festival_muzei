@@ -88,9 +88,9 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   super.onSubscriberAdded(subscriber);
 	   //android.util.Log.d("onSubscriberAdded()", "onSubscriberAdded()");
 	   // Add the subscriber, so we can grant permissions later.
-	   Set<String> value = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
-      value.add(subscriber.getPackageName());
-      saveSubsPrefs(value);
+	   Set<String> subs = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
+	   subs.add(subscriber.getPackageName());
+      saveSubsPrefs(subs);
     	}
 	
 	@Override
@@ -98,14 +98,14 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   super.onSubscriberRemoved(subscriber);
 	   //android.util.Log.d("onSubscriberRemoved()", "onSubscriberRemoved()");
 	   // Remove the subscriber.
-	   Set<String> value = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
-      value.remove(subscriber.getPackageName());
-      saveSubsPrefs(value);
+	   Set<String> subs = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
+	   subs.remove(subscriber.getPackageName());
+      saveSubsPrefs(subs);
     	}
 	
-	private void saveSubsPrefs(Set<String> value) {
+	private void saveSubsPrefs(Set<String> subs) {
       SharedPreferences.Editor editor = prefs.edit();
-      editor.putStringSet(SUBS_KEY, value);
+      editor.putStringSet(SUBS_KEY, subs);
       editor.commit();
 	   }
 	
@@ -131,7 +131,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	@Override
 	protected void onUpdate(int reason) {
 		try {
-		   // First time, load the index randomly.
+		   // First time, load the index randomly, because it loads a random number when it fails to retrieve the key.
 		   int artIndex = loadArtIndex();
 		   if(reason==UPDATE_REASON_USER_NEXT ||
 			      reason==UPDATE_REASON_SCHEDULED) {
