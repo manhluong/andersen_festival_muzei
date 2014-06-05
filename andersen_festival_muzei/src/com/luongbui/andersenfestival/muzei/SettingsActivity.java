@@ -10,6 +10,7 @@ import android.preference.PreferenceActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class SettingsActivity extends PreferenceActivity {
    @Override
@@ -35,5 +36,8 @@ public class SettingsActivity extends PreferenceActivity {
             }
 
          });
+      
+      Toast toast = Toast.makeText(this, "Tap on an element to open artist's home page.", Toast.LENGTH_LONG);
+      toast.show();
       }
    }
