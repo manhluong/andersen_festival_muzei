@@ -29,7 +29,7 @@ public class SettingsActivity extends PreferenceActivity {
                                     int position,
                                     long id) {
             final ArtPiece item = (ArtPiece) parent.getItemAtPosition(position);
-            android.util.Log.d("URL", item.getAuthorUrl());
+            //android.util.Log.d("URL", item.getAuthorUrl());
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getAuthorUrl()));
             startActivity(browserIntent);
             }

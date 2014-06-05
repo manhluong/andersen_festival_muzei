@@ -70,7 +70,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	@Override
 	protected void onSubscriberAdded(ComponentName subscriber) {
 	   super.onSubscriberAdded(subscriber);
-	   android.util.Log.d("onSubscriberAdded()", "onSubscriberAdded()");
+	   //android.util.Log.d("onSubscriberAdded()", "onSubscriberAdded()");
 	   // Add the subscriber, so we can grant permissions later.
 	   Set<String> value = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
       value.add(subscriber.getPackageName());
@@ -80,7 +80,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	@Override
 	protected void onSubscriberRemoved(ComponentName subscriber) {
 	   super.onSubscriberRemoved(subscriber);
-	   android.util.Log.d("onSubscriberRemoved()", "onSubscriberRemoved()");
+	   //android.util.Log.d("onSubscriberRemoved()", "onSubscriberRemoved()");
 	   // Remove the subscriber.
 	   Set<String> value = prefs.getStringSet(SUBS_KEY, new TreeSet<String>());
       value.remove(subscriber.getPackageName());
@@ -122,17 +122,17 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 		      incrArtIndex(artIndex);
 			   //android.util.Log.d("INDEX USER NEXT", ""+artIndex);
 			   }
-			android.util.Log.d("INDEX", ""+artIndex);
+			//android.util.Log.d("INDEX", ""+artIndex);
 			//For now, empty the external sub dir each time: TODO a more "flexible" cache system.
 			deleteExternalSubdir(new File(getApplicationContext().getFilesDir(),
 		                                  PORTRAITS_SUBDIR));
 			File outFile = new File(getApplicationContext().getFilesDir(),
 			                        PORTRAITS_SUBDIR + File.separator + PORTRAITS[artIndex].getFileName());
          //TODO test if the file exits, should be false.
-			android.util.Log.d("TEST FILE EXISTS", ""+outFile.exists()+" : " + outFile.getPath());
+			//android.util.Log.d("TEST FILE EXISTS", ""+outFile.exists()+" : " + outFile.getPath());
 			copyAsset(PORTRAITS_SUBDIR, PORTRAITS[artIndex].getFileName());
 			//TODO test if the file exits, should be true.
-			android.util.Log.d("TEST FILE EXISTS", ""+outFile.exists()+" : " + outFile.getPath());
+			//android.util.Log.d("TEST FILE EXISTS", ""+outFile.exists()+" : " + outFile.getPath());
 			fileUri = FileProvider.getUriForFile(getApplicationContext(),
                                               FILE_PROVIDER_AUTHORITIES,
                                               outFile);
@@ -141,7 +141,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 			   getApplicationContext().grantUriPermission(subPackage,
                                                        fileUri,
                                                        Intent.FLAG_GRANT_READ_URI_PERMISSION);
-			android.util.Log.d("SHARED FILE URI", ""+fileUri.toString());
+			//android.util.Log.d("SHARED FILE URI", ""+fileUri.toString());
 			publishArtwork(new Artwork.Builder()
 								.imageUri(fileUri)
 								.title(PORTRAITS[artIndex].getTitle())
@@ -167,8 +167,10 @@ public class AndersenFestivalSource extends MuzeiArtSource {
       }
 
 	/**
-	 * From here: http://stackoverflow.com/questions/4447477/android-how-to-copy-files-in-assets-to-sdcard
-	 * 
+	 * Copy a single asset to private app folder.<br>
+	 * <br>
+	 * It creates the sub folder accordingly.
+	 * <br>
 	 * @param subPath A relative path within the assets. Can be a directory: "andersen_portraits".
 	 * @param fileName Name of file to copy, relative to subPath.
 	 * @throws IOException
@@ -183,7 +185,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 		}
 	
 	/**
-	 * From here: http://stackoverflow.com/questions/4447477/android-how-to-copy-files-in-assets-to-sdcard
+	 * Copy the file using the asset manager.<br>
 	 * 
 	 * @param assetManager
 	 * @param fileName Relative to assets folder.
@@ -207,7 +209,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   }
 
 	/**
-	 * From here: http://stackoverflow.com/questions/4447477/android-how-to-copy-files-in-assets-to-sdcard
+	 * Copy from in stream to out stream.
 	 * 
 	 * @param in
 	 * @param out
