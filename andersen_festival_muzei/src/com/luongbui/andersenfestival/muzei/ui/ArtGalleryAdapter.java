@@ -42,6 +42,7 @@ public class ArtGalleryAdapter extends ArrayAdapter<ArtPiece> {
       R.drawable.olga_tranchini_icon,
       R.drawable.anais_tonelli_icon,
       R.drawable.silvia_venturi_icon,
+      R.drawable.marco_bassi,
       R.drawable.francesca_consalvo_icon
       };
    
