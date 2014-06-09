@@ -67,6 +67,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   new ArtPiece("olga_tranchini.jpg", "Hans Christian Andersen", "Olga Tranchini", "2014", "http://olgatranchini.tumblr.com/"),
 	   new ArtPiece("anais_tonelli.jpg", "Hans Christian Andersen", "Anais Tonelli", "2014", "http://anaistonelli.blogspot.it/"),
 	   new ArtPiece("silvia_venturi.jpg", "Hans Christian Andersen", "Silvia Venturi", "2014", "http://silviaventuri.tumblr.com/"),
+	   new ArtPiece("marco_bassi.jpg", "Hans Christian Andersen", "Marco Bassi", "2014", "http://www.fareunapausa.com/"),
 	   new ArtPiece("francesca_consalvo.jpg", "Hans Christian Andersen", "Francesca Consalvo", "2014", "about:blank")
       };
 	
