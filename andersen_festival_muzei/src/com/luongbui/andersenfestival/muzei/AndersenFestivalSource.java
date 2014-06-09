@@ -143,8 +143,7 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 		      incrArtIndex(artIndex);
 			   //android.util.Log.d("INDEX USER NEXT", ""+artIndex);
 			   }
-		   else
-		      artIndex = loadArtIndex(); // Random if none exists.
+		   artIndex = loadArtIndex(); // Random if none exists.
 			//android.util.Log.d("INDEX", ""+artIndex);
 			//For now, empty the external sub dir each time: TODO a more "flexible" cache system.
 			deleteExternalSubdir(new File(getApplicationContext().getFilesDir(),
