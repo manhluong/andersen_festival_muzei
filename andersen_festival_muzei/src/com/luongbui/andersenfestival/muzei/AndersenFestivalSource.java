@@ -47,6 +47,8 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	
 	private static final String ART_INDEX_KEY = NAME + ".Index";
 	
+	private static final int NO_INDEX_CODE = -1;
+	
 	/**
 	 * public and static to use it as data for the list adapter of the configuration activity.<br>
 	 * <br>
@@ -110,7 +112,11 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   }
 	
 	private int loadArtIndex() {
-	   int res = prefs.getInt(ART_INDEX_KEY, (int)(Math.random() * ((AndersenFestivalSource.PORTRAITS.length-1) + 1)));
+	   int res = prefs.getInt(ART_INDEX_KEY, NO_INDEX_CODE);
+	   if(res==NO_INDEX_CODE) {
+	      res = (int)(Math.random() * ((AndersenFestivalSource.PORTRAITS.length-1) + 1));
+	      saveArtIndex(res);
+	      }
 	   return res;
 	   }
 	
@@ -131,13 +137,14 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	@Override
 	protected void onUpdate(int reason) {
 		try {
-		   // First time, load the index randomly, because it loads a random number when it fails to retrieve the key.
-		   int artIndex = loadArtIndex();
+		   int artIndex = NO_INDEX_CODE;
 		   if(reason==UPDATE_REASON_USER_NEXT ||
 			      reason==UPDATE_REASON_SCHEDULED) {
 		      incrArtIndex(artIndex);
 			   //android.util.Log.d("INDEX USER NEXT", ""+artIndex);
 			   }
+		   else
+		      artIndex = loadArtIndex(); // Random if none exists.
 			//android.util.Log.d("INDEX", ""+artIndex);
 			//For now, empty the external sub dir each time: TODO a more "flexible" cache system.
 			deleteExternalSubdir(new File(getApplicationContext().getFilesDir(),
