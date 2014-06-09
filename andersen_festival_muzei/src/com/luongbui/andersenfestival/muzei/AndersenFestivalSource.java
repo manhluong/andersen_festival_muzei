@@ -121,12 +121,13 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	   return res;
 	   }
 	
-	private void incrArtIndex(int artIndex) {
+	private int incrArtIndex(int artIndex) {
 	   if(artIndex < (AndersenFestivalSource.PORTRAITS.length-1))
          artIndex++;
       else
          artIndex = 0;
 	   saveArtIndex(artIndex);
+	   return artIndex;
 	   }
 	
 	private void saveArtIndex(int value) {
@@ -138,14 +139,13 @@ public class AndersenFestivalSource extends MuzeiArtSource {
 	@Override
 	protected void onUpdate(int reason) {
 		try {
-		   int artIndex = NO_INDEX_CODE;
+		   int artIndex = loadArtIndex(); // Random if none exists.
+		   //android.util.Log.d("INDEX", ""+artIndex);
 		   if(reason==UPDATE_REASON_USER_NEXT ||
 			      reason==UPDATE_REASON_SCHEDULED) {
-		      incrArtIndex(artIndex);
+		      artIndex = incrArtIndex(artIndex);
 			   //android.util.Log.d("INDEX USER NEXT", ""+artIndex);
 			   }
-		   artIndex = loadArtIndex(); // Random if none exists.
-			//android.util.Log.d("INDEX", ""+artIndex);
 			//For now, empty the external sub dir each time: TODO a more "flexible" cache system.
 			deleteExternalSubdir(new File(getApplicationContext().getFilesDir(),
 		                                  PORTRAITS_SUBDIR));
