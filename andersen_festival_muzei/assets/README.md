@@ -18,4 +18,5 @@ To compile the project you have to add the following assets in this folder:
 - andersen_portraits_2014/olga_tranchini.jpg
 - andersen_portraits_2014/silvia_venturi.jpg
 - andersen_portraits_2014/stefano_tirasso.jpg
+- andersen_portraits_2014/marco_bassi.jpg
 
